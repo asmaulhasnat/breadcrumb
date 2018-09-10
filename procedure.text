@@ -1,0 +1,16 @@
+delimiter //
+CREATE PROCEDURE Get_breadcumb_branch_procedure(id INT)
+BEGIN
+ drop temporary table if exists branchtemp;
+    create temporary table branchtemp
+    (   id int AUTO_INCREMENT primary key,
+     	branch_id INT NOT NULL,
+      	branch_name Varchar(255) NOT NULL
+    );
+ REPEAT
+ insert into branchtemp(id, branch_id, branch_name) select null, branches2.id,branches2.branch_name from branches2 where branches2.id=id;
+ SET id = (SELECT branches2.parent_branch FROM branches2  WHERE branches2.id=id);
+ UNTIL id=0  END REPEAT;
+ SELECT * FROM branchtemp;
+END
+//
